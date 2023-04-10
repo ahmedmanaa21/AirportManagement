@@ -1,126 +1,190 @@
-﻿namespace AM.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Passenger
+namespace AM.Core.Domain
 {
- 
-    public DateTime BirthDate { get; set; }
-  
-    public String PassportNumber { get; set; }
-    public String EmailAddress { get; set; }
-    public String FirstName { get; set; }
-    public String LastName { get; set; }
-    public String TelNumber { get; set; }
-    
-    public int Age { get; private set; }
-    
-    
-
-    public ICollection<Flight> Flights { get; set; }
-    
-    
-    public override string ToString()
-    {
-        return $"PassportNumber: {PassportNumber}, BirthDate: {BirthDate}, EmailAddress: {EmailAddress}, FirstName: {FirstName}, LastName: {LastName}, TelNumber: {TelNumber}";
-    }
-
-    public Passenger()
-    {
-    }
-    public Passenger(DateTime birthDate, string passportNumber, string emailAddress, string firstName, string lastName, string telNumber)
-    {
-        BirthDate = birthDate;
-        PassportNumber = passportNumber;
-        EmailAddress = emailAddress;
-        FirstName = firstName;
-        LastName = lastName;
-        TelNumber = telNumber;
-    }
-
-    bool CheckProfile(String Firstname, String Lastname)
-    {
-        if (Firstname == FirstName && Lastname == LastName)
+    public class Passenger
+    { 
+       // public int Id { get; set; }
+       
+        [DisplayName("Date of Birth")]
+        [Required]
+        public DateTime BirthDate
         {
-            return true;
+            get;
+            set;
         }
-        else
+        [Key, MaxLength(7, ErrorMessage = "max lenght = 7"),
+            MinLength(7, ErrorMessage = "min lenght = 7")]
+        public string PassportNumber { get; set; }
+
+        //[Display(Name = "Email Address")]
+        //[Required(ErrorMessage = "The email address is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        public string EmailAddress { get; set; }
+
+       [MaxLength(25, ErrorMessage = "max lenght = 25"),
+            MinLength(3, ErrorMessage = "min lenght = 3")]
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        [DataType(DataType.PhoneNumber)]
+        //[Phone] methode2 
+        public string TelNumber { get; set; }
+        public IList<Flight> Flights { get; set; }
+        int age;
+        public int Age //ecriture full si j'ai un traitement à faire dans get
         {
+            get {
+                DateTime now = DateTime.Now;
+                age = now.Year - BirthDate.Year;
+                if (now < BirthDate.AddYears(age)) //comparer now avec le futur anniversaire
+                {
+                    age--;
+                }
+                return age;
+            }
+        }
+
+        public override string ToString()
+        {
+            return "BirthDate:" + BirthDate + ";"
+                + "PassportNumber:" + PassportNumber + ";"
+                + "EmailAddress:" + EmailAddress + ";"
+                + "FirstName:" + FirstName + ";"
+                + "LastName:" + LastName + ";"
+                + "TelNumber:" + TelNumber;
+        }
+
+        //Question11.a
+        public bool CheckProfile(string lastName, string firstName)
+        {
+            if (lastName == LastName && firstName == FirstName)
+                return true;
             return false;
         }
-        
-    }
 
-    bool CheckProfile2(String Firstname, String Lastname, String Emailadress=null)
-    {
-        if (Firstname == FirstName && Lastname == LastName && Emailadress == EmailAddress)
+        //Question11.b
+        /*
+        public bool CheckProfile(string lastName, string firstName, string emailAdress)
         {
-            return true;
-        }
-        else
-        {
+            if (lastName == LastName && firstName == FirstName && emailAdress == EmailAddress)
+                return true;
             return false;
         }
-        
+        */
+        //*Question11.c (on remplace les 2 fonctions des Q.11.a ET Q.11.b )
+        public bool CheckProfile(string lastName, string firstName, string emailAdress = null)
+        {
+            if (emailAdress == null)
+                return lastName == LastName && firstName == FirstName;
+            else
+                return lastName == LastName && firstName == FirstName && emailAdress == EmailAddress;
+        }
+
+
+        //question 12 Polymorphisme par héritage
+        public virtual string GetPassengerType()
+        {
+            return "I am a passenger";
+        }
+        //Question 13
+        public void GetAge(DateTime birthDate, ref int calculatedAge)
+        {
+            DateTime now = DateTime.Now;
+            int age = now.Year - birthDate.Year;
+
+            if (now < birthDate.AddYears(age))
+            {
+                age--;
+            }
+
+            calculatedAge = age;
+        }
+
+        // Autres propriétés et méthodes de la classe Passenger
+        //public void GetAge(Passenger aPassenger)
+        //{
+        //    DateTime now = DateTime.Now;
+        //    int age = now.Year - aPassenger.BirthDate.Year;
+
+        //    if (now < BirthDate.AddYears(age))
+        //    {
+        //        age--;
+        //    }
+
+        //    aPassenger.Age = age;
+        //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //tp1 Question 13.a
+        /* public void GetAge(DateTime birthDate, ref int calculatedAge)
+         {
+             DateTime now = DateTime.Now;
+             int age = now.Year - birthDate.Year;
+             if (now < birthDate.AddYears(age)) //comparer now avec le futur anniversaire
+             {
+                 age--;
+             }
+             calculatedAge = age;            
+         }
+        */
+        /* public void GetAge(Passenger aPassenger)
+         {
+             DateTime now = DateTime.Now;
+             int age = now.Year - aPassenger.BirthDate.Year;
+             if (now < aPassenger.BirthDate.AddYears(age)) //comparer now avec le futur anniversaire
+             {
+                 age--;
+             }
+             aPassenger.Age = age;
+
+         }
+        */
+
     }
-    
-    bool CheckProfileWithAll(String Firstname, String Lastname, String Emailadress=null)
-    {
-       if (Emailadress== null)
-       {
-           return CheckProfile(Firstname, Lastname);
-       }
-       else
-       {
-           return CheckProfile2(Firstname, Lastname, Emailadress);
-       }
-        
-    }
-    
-    public string GetPassengerTypes()
-    {
-        if(typeof(Passenger)==typeof(Passenger))
-        {
-            return "im a passenger";
-        }
-        if(typeof(Passenger)==typeof(Staff))
-        {
-            return "iam a passenger i am a staff member";
-        }
-        else
-        {
-            return "iam a Traveler";
-        }
-    }
-    
-    
-    public void GetAge(DateTime birthDate, int calculatedAge)
-    {
-        int age = DateTime.Now.Year - birthDate.Year;
-        if (DateTime.Now.DayOfYear < birthDate.DayOfYear)
-        {
-            age--; //
-        }
-        if (age == calculatedAge)
-        {
-            Console.WriteLine("Age is correct");
-        }
-        else
-        {
-            Console.WriteLine("Age is not correct");
-        }
-    }
-    
-    
-    
-   public void GetAgeP(Passenger aPassenger)
-    {
-        int age = DateTime.Now.Year - aPassenger.BirthDate.Year;
-        if (DateTime.Now.DayOfYear < aPassenger.BirthDate.DayOfYear)
-        {
-            age--; //
-        }
-        aPassenger.Age = age;
-    }
-    
-     
-    
+
 }

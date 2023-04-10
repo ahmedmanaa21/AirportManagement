@@ -1,33 +1,25 @@
-﻿namespace AM.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Traveller : Passenger
-{   
-    public String HealthInformation { get; set; }
-    public  String Nationality { get; set; }
-    
-    public override string ToString()
+namespace AM.Core.Domain
+{
+    public class Traveller:Passenger
     {
-        return base.ToString()+
-               "HealthInformation:" + HealthInformation + "" +
-               "Nationality:" + Nationality;
-    }
-    public Traveller()
-    {
-    }
-    public Traveller(String healthInformation, String nationality)
-    {
-        HealthInformation=healthInformation;
-        Nationality=nationality;
-        
-            
-    }
-    
-    
-        public string GetPassengerType()
+        public string HealthInformation { get; set; }
+        public string Nationality { get; set; }
+        public override string ToString()
         {
-            return base.GetPassengerTypes()+"Traveller";
+            return base.ToString() //l'appellation de la classe passenger
+                + "HealthInformation:" + HealthInformation + ";"
+                + "Nationality:" + Nationality;
         }
-
-
-
+        //question 12 Polymorphisme par héritage
+        public override string GetPassengerType()
+        {
+            return "I am a Traveller";
+        }
+    }
 }

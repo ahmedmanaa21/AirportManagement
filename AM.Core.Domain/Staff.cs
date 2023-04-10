@@ -1,31 +1,33 @@
-﻿namespace AM.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Staff: Passenger
+namespace AM.Core.Domain
 {
-    
-    public DateTime EmployementDate { get; set; }
-    public String Function { get; set; }
-    public float Salary { get; set; }
-    
-    public override string ToString()
+    public class Staff :Passenger
     {
-        return base.ToString() + $", EmployementDate: {EmployementDate}, Function: {Function}, Salary: {Salary}";
-    }
+        public DateTime EmployementDate { get; set; }
+        public string Function { get; set; }
+        [DataType(DataType.Currency)]
+        public double Salary { get; set; }
+        public override string ToString()
+        {
+            return base.ToString() //l'appellation de la classe passenger
+                +"EmployementDate:" + EmployementDate + ";"
+                + "Function:" + Function + ";"
+                + "Salary:" + Salary ;
+        }
 
-    public Staff()
-    {
-    }
-    public Staff(DateTime birthDate, string passportNumber, string emailAddress, string firstName, string lastName, string telNumber, DateTime employementDate, string function, float salary) : base(birthDate, passportNumber, emailAddress, firstName, lastName, telNumber)
-    {
-        EmployementDate = employementDate;
-        Function = function;
-        Salary = salary;
-    }
-    
-    public string GetPassengerType()
-    {
-        return base.GetPassengerTypes()+"I am a Staff Member";
-    }
+        //question 12 Polymorphisme par héritage
+        public override string GetPassengerType()
+        {
+            return base.GetPassengerType() // elle affiche I m passanger
+                +"I am a Staff Member";
+        }
 
-    
+    }
 }

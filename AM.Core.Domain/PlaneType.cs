@@ -1,6 +1,13 @@
-﻿namespace AM.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public enum PlaneType
+namespace AM.Core.Domain
 {
-    Boeing747=1,Airbus=2
+    public enum PlaneType
+    {
+        BOING=1,AIRBUS=2
+    }
 }

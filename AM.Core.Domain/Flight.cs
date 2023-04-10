@@ -1,34 +1,36 @@
-﻿namespace AM.Core.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
 
-public class Flight
+namespace AM.Core.Domain
 {
-    public String Destination { get; set; }
-    public DateTime Departure { get; set; }
-    public DateTime FlightDate { get; set; }
-    public String Flightid { get; set; }
-    public DateTime EffectiveArrival { get; set; }
-    public float EstimatedDuraction { get; set; }
-    
-    public ICollection<Passenger> Passengers { get; set; }
-    public Plane Plane { get; set; }
-    
-    public override string ToString()
+   // [Table("MyFlight")]
+    public class Flight
     {
-        return $"Flight: {Flightid} - {Destination} - {Departure} - {FlightDate} - {EffectiveArrival} - {EstimatedDuraction}";
+        public string Destination { get; set; }
+        public string Departure { get; set; }
+        public DateTime FlightDate { get; set; }
+        public int FlightId { get; set; }
+        public DateTime EffectiveArrival { get; set;}
+        public int EstimatedDuration { get; set; }
+        [ForeignKey("PlaneId")] //methode 1 
+        public Plane MyPlane { get; set; }
+       // [ForeignKey("MyPlane")] methode  2
+        public int PlaneId { get; set; } //prop
+        public IList<Passenger> passengers { get; set; }
+        public String Comment { get; set; }
+        public override string ToString()
+        {
+            return "Destination:" + Destination + ";"
+                + "Departure:" + Departure + ";"
+                + "FlightDate:" + FlightDate + ";"
+                + "FlightId:" + FlightId + ";"
+                + "EffectiveArrival:" + EffectiveArrival + ";"
+                + "EstimatedDuration:" + EstimatedDuration;
+        }
     }
-    
-    public Flight()
-    {
-    }
-
-    public Flight(string destination, DateTime departure, DateTime flightDate, string flightid, DateTime effectiveArrival, float estimatedDuraction)
-    {
-        Destination = destination;
-        Departure = departure;
-        FlightDate = flightDate;
-        Flightid = flightid;
-        EffectiveArrival = effectiveArrival;
-        EstimatedDuraction = estimatedDuraction;
-    }
-
 }
